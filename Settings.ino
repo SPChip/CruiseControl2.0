@@ -1,8 +1,8 @@
-void Settings() {
+void Settings() {                               // меню настроек
   byte setting = 1;                             // номер текущей настройки
   byte levelMenu = 1;                           // подпараметры в меню
-  bool inputSettings = 0;                       // флаг выбора установки
-  bool flagBlink = 1;                           // флаг для мигания
+  bool inputSettings = 0;                       // флаг выбора установки (вход в установку выполнен или нет)
+  bool flagBlink = 1;                           // флаг для мигания изменяемого параметра
   LCD.Clear_LCD();                              // очищаем дисплей
   while (!BTN1.isHolded()) {                    // пока не будет удержана кнопка 1
     BTN1.tick();                                // постоянно проверяем все три кнопки
@@ -11,14 +11,14 @@ void Settings() {
     if (inputSettings == 0 && BTN2.isClick()) {  // если не выбрана установка и нажата кнопка 2
       LCD.Clear_LCD();
       setting--;                                 // переходим к предъидущей настройке
-      if (setting < 1) {                         // максимум 6 настроек
-        setting = 6;
+      if (setting < 1) {                         // максимум 5 настроек
+        setting = 5;
       }
     }
     if (inputSettings == 0 && BTN3.isClick()) {  // если не выбрана установка и нажата кнопка 2
       LCD.Clear_LCD();
       setting++;                                 // переходим к следующей настройке
-      if (setting > 6) {
+      if (setting > 5) {
         setting = 1;
       }
     }
@@ -28,8 +28,8 @@ void Settings() {
     }
     if (inputSettings) {                           // если вошли в установку
       switch (setting) {                           // установка
-        case 1:                                             //подсветка
-          if (BTN1.isClick()) {
+        case 1:                                    // подсветка
+          if (BTN1.isClick()) {                    // если нажата кнопка 1 выходим из установки
             LCD.Clear_LCD();
             inputSettings = 0;
           }
@@ -164,15 +164,31 @@ void Settings() {
               }
               break;
           }
-
-
+        case 5:                       // настройка шага изменения скорости
+          if (BTN1.isClick()) {
+            LCD.Clear_LCD();
+            inputSettings = 0;
+          }
+          if (BTN2.isClick() || BTN2.isStep()) {
+            LCD.Clear_LCD();
+            stepChangeSpeed = stepChangeSpeed - 5;
+            if (stepChangeSpeed < 5) stepChangeSpeed = 5;
+            EEPROM.put(STEP_ADDR, stepChangeSpeed);  // записываем в eeprom значение шага изменения скорости
+          }
+          if (BTN3.isClick() || BTN3.isStep()) {
+            LCD.Clear_LCD();
+            stepChangeSpeed = stepChangeSpeed + 5;
+            if (stepChangeSpeed > 95) stepChangeSpeed = 95;
+            EEPROM.put(STEP_ADDR, stepChangeSpeed);  // записываем в eeprom значение шага изменения скорости
+          }
           break;
       }
     }
 
-    // отрисовка
+
+    // ОТРИСОВКА
     // заголовок
-    LCD.print(20, 0, 1, "Settings");
+    LCD.print(25, 0, 1, "Settings");
     LCD.drawFastHLine(0, 8, 96, 1);
     // курсор
     LCD.print(0, setting * 10 + 1, 1, ">");
@@ -330,15 +346,16 @@ void Settings() {
 
     // PID
     LCD.print(6, 41, 1, "PID");
+    // Kp
     if (inputSettings && setting == 4 && levelMenu == 1 && !BTN2.state() && !BTN3.state()) {
       if (BLINK_TIMER.isReady()) {
         if (flagBlink) {
           LCD.print(28, 41, 1,  "   ");
         }
         else {
-        LCD.print(28, 41, 1, (int) REGULATOR.Kp);
-      LCD.print(34, 41, 1, ".");
-      LCD.print(39, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+          LCD.print(28, 41, 1, (int) REGULATOR.Kp);
+          LCD.print(34, 41, 1, ".");
+          LCD.print(39, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
         }
         flagBlink = !flagBlink;
       }
@@ -348,15 +365,14 @@ void Settings() {
       LCD.print(34, 41, 1, ".");
       LCD.print(39, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
     }
-
-
+    // Ki
     if (inputSettings && setting == 4 && levelMenu == 2 && !BTN2.state() && !BTN3.state()) {
       if (BLINK_TIMER.isReady()) {
         if (flagBlink) {
           LCD.print(54, 41, 1,  "   ");
         }
         else {
-           LCD.print(54, 41, 1, (int) REGULATOR.Ki);
+          LCD.print(54, 41, 1, (int) REGULATOR.Ki);
           LCD.print(60, 41, 1, ".");
           LCD.print(65, 41, 1, (int) (REGULATOR.Ki * 10) % 10);
         }
@@ -364,13 +380,11 @@ void Settings() {
       }
     }
     else {
-       LCD.print(54, 41, 1, (int) REGULATOR.Ki);
-          LCD.print(60, 41, 1, ".");
-          LCD.print(65, 41, 1, (int) (REGULATOR.Ki * 10) % 10);
+      LCD.print(54, 41, 1, (int) REGULATOR.Ki);
+      LCD.print(60, 41, 1, ".");
+      LCD.print(65, 41, 1, (int) (REGULATOR.Ki * 10) % 10);
     }
-
-
-
+    // Kd
     if (inputSettings && setting == 4 && levelMenu == 3 && !BTN2.state() && !BTN3.state()) {
       if (BLINK_TIMER.isReady()) {
         if (flagBlink) {
@@ -389,41 +403,26 @@ void Settings() {
       LCD.print(86, 41, 1, ".");
       LCD.print(91, 41, 1, (int) (REGULATOR.Kd * 10) % 10);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // шаг изменения скорости
+    LCD.print(6, 51, 1, "SpeedStep");
+    if (inputSettings && setting == 5 && !BTN2.state() && !BTN3.state()) {
+      if (BLINK_TIMER.isReady()) {
+        if (flagBlink) {
+          LCD.print(80, 51, 1,  "   ");
+        }
+        else {
+          LCD.print(80, 51, 1,  stepChangeSpeed / 10);
+          LCD.print(86, 51, 1, ".");
+          LCD.print(91, 51, 1,  stepChangeSpeed % 10);
+        }
+        flagBlink = !flagBlink;
+      }
+    }
+    else {
+      LCD.print(80, 51, 1,  stepChangeSpeed / 10);
+      LCD.print(86, 51, 1, ".");
+      LCD.print(91, 51, 1,  stepChangeSpeed % 10);
+    }
     LCD.Update();
   }
-
 }

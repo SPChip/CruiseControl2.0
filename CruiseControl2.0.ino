@@ -1,10 +1,11 @@
-//SPChip 2.0
+//SPChip 2.2
 #include "lcd1202.h"      // Библиотека для дисплея
 #include "GyverButton.h"  // Библиотека для кнопок
 #include "GyverTimer.h"   // Библиотека для таймеров
 #include "GyverPID.h"     // Библиотека для PID регулятора
 #include <EEPROM.h>       // Библиотека для eeprom
 #include "microDS3231.h"  // Библиотека для часов
+
 
 #define BTN_PIN1 14     // кнопка1 подключена сюда (BTN_PIN --- КНОПКА --- GND)
 #define BTN_PIN2 15     // кнопка2 подключена сюда (BTN_PIN --- КНОПКА --- GND)
@@ -17,7 +18,7 @@
 
 
 #define INIT_ADDR 1023        // номер резервной ячейки для инициализации первого запуска
-#define INIT_KEY 44           // ключ первого запуска. 0-254, на выбор, надо поменять на любое значение и будет как впервый раз
+#define INIT_KEY 33           // ключ первого запуска. 0-254, на выбор, надо поменять на любое значение и будет как впервый раз
 #define DISPLAY_MODE_ADDR 0   // адрес в eeprom для хранения режима экрана dysplayMode
 #define BACKLIGHT_ADDR 10     // адрес в eeprom для хранения режима подсветки дисплея
 #define PASSIVEMODE_ADDR 20   // адрес в eeprom для хранения состояния пассивного режима
@@ -82,6 +83,7 @@ void setup() {
   BTN1.setTimeout(2000);                    // таймаут для долгого нажатия кнопки 1
   BTN2.setStepTimeout(200);                 // установка таймаута между инкрементами ( с какой скоростью будут меняться цифры при удержании кнопки)
   BTN3.setStepTimeout(200);                 // установка таймаута между инкрементами ( с какой скоростью будут меняться цифры при удержании кнопки)
+  dysplayMode = 3;                          // в этом режиме запрашиваются нужные данные для начальных % и емкости
   if (EEPROM.read(INIT_ADDR) != INIT_KEY) { // первый запуск
     EEPROM.write(INIT_ADDR, INIT_KEY);      // записали ключ
     EEPROM.put(DISPLAY_MODE_ADDR, 1);       // режим экрана 1
@@ -94,13 +96,27 @@ void setup() {
   }
   EEPROM.get(BACKLIGHT_ADDR, BL_Lcd);            // читаем режим подсветки
   digitalWrite(BL_LCD_PIN, BL_Lcd);              // включаем/выключаем подсветку дисплея
-  EEPROM.get(DISPLAY_MODE_ADDR, dysplayMode);    // читаем режим экрана из eeprom
   EEPROM.get(PASSIVEMODE_ADDR, passiveMode);     // читаем состояние пассивного режима
   EEPROM.get(KP_ADDR, REGULATOR.Kp);             // читаем и устанавливаем значение Kp
   EEPROM.get(KI_ADDR, REGULATOR.Ki);             // читаем и устанавливаем значение Ki
   EEPROM.get(KD_ADDR, REGULATOR.Kd);             // читаем и устанавливаем значение Kd
   EEPROM.get(STEP_ADDR, stepChangeSpeed);        // читаем и устанавливаем значение шага изменения скорости
+/*
+  while (millis () < 3000 ) {               // ждем 3 сек, чтобы наверняка получить все данные
+    ReceivingData ();                       // получаем данные о начальном % и емкости батарей
+    if (batCharge > 0 && inBatCapacityLeft > 0 && exBatCapacityLeft > 0 ) return ; // если нужные данные получены выходим из пока досрочно
+  }
+  startBatCharge = batCharge;   // засекаем начальный заряд батареи
+  startBatCapacityLeft = inBatCapacityLeft + exBatCapacityLeft;  // засекаем начальную емкость батарей
+  if (startBatCharge == 0 || startBatCapacityLeft == 0) {
+    DisplayNoData();
+    delay (1000);
+  }
+  */
+  EEPROM.get(DISPLAY_MODE_ADDR, dysplayMode);    // читаем режим экрана из eeprom
 }
+
+
 
 
 
@@ -116,7 +132,7 @@ void loop() {
   if (BTN1.isHolded()) {                         // если кнопка 1 зажата входим в меню установок
     Settings();
   }
-  if (BTN2.isClick()|| BTN2.isStep()) {                          // если кнопка 2 нажата
+  if (BTN2.isClick() || BTN2.isStep()) {         // если кнопка 2 нажата
     if (!cruiseControlFlag) {                    // если круиз контроль выключен
       cruiseControlFlag  = 1;                    // включаем круиз контроль
       presetSpeed = currentSpeed;                // запоминаем текущую скорость
@@ -125,7 +141,7 @@ void loop() {
       presetSpeed = presetSpeed - stepChangeSpeed; // увеличиваем установленную скорость на заданный шаг
     }
   }
-  if (BTN3.isClick()|| BTN3.isStep()) {                          // если кнопка 3 нажата
+  if (BTN3.isClick() || BTN3.isStep()) {         // если кнопка 3 нажата
     if (!cruiseControlFlag) {                    // если круиз контроль выключен
       cruiseControlFlag  = 1;                    // включаем круиз контроль
       presetSpeed = currentSpeed;                // запоминаем текущую скорость

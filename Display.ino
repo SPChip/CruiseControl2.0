@@ -189,42 +189,42 @@ void Display3() {
   LCD.Update();
 
   // пробег за поездку
-  LCD.print(0, 21, 1, "Distance");
-  LCD.print(64, 21, 1, (currentMileage % 10000) / 1000);
-  LCD.print(70, 21, 1, (currentMileage % 1000) / 100);
-  LCD.print(75, 21, 1, ",");
-  LCD.print(79, 21, 1, (currentMileage % 100) / 10);
-  LCD.print(85, 21, 1, currentMileage % 10);
-  LCD.print(91, 21, 1, "км");
+  LCD.print(0, 21, 1, "Dist");
+  LCD.print(58, 21, 1, (currentMileage % 10000) / 1000);
+  LCD.print(64, 21, 1, (currentMileage % 1000) / 100);
+  LCD.print(69, 21, 1, ",");
+  LCD.print(73, 21, 1, (currentMileage % 100) / 10);
+  LCD.print(79, 21, 1, currentMileage % 10);
+  LCD.print(85, 21, 1, "км");
 
   // максимальная скорость
-  LCD.print(0, 29, 1, "MaxSpeed");
+  LCD.print(0, 29, 1, "MaxSpd");
   if ((maxSpeed % 1000) / 100 > 0) {
-    LCD.print(58, 29, 1, (maxSpeed % 1000) / 100);
+    LCD.print(52, 29, 1, (maxSpeed % 1000) / 100);
   }
   else {
-    LCD.print(58, 29, 1, " ");
+    LCD.print(52, 29, 1, " ");
   }
-  LCD.print(64, 29, 1, (maxSpeed % 100) / 10);
-  LCD.print(69, 29, 1, ",");
-  LCD.print(73, 29, 1, maxSpeed % 10);
-  LCD.print(79, 29, 1, "км/ч");
+  LCD.print(58, 29, 1, (maxSpeed % 100) / 10);
+  LCD.print(63, 29, 1, ",");
+  LCD.print(67, 29, 1, maxSpeed % 10);
+  LCD.print(73, 29, 1, "км/ч");
 
   // средняя скорость
-  LCD.print(0, 37, 1, "AverSpeed");
+  LCD.print(0, 37, 1, "AverSpd");
   if ((averageSpeed % 1000) / 100 > 0) {
-    LCD.print(58, 37, 1, (averageSpeed % 1000) / 100);
+    LCD.print(52, 37, 1, (averageSpeed % 1000) / 100);
   }
   else {
-    LCD.print(58, 37, 1, " ");
+    LCD.print(52, 37, 1, " ");
   }
-  LCD.print(64, 37, 1, (averageSpeed % 100) / 10);
-  LCD.print(69, 37, 1, ",");
-  LCD.print(73, 37, 1, averageSpeed % 10);
-  LCD.print(79, 37, 1, "км/ч");
+  LCD.print(58, 37, 1, (averageSpeed % 100) / 10);
+  LCD.print(63, 37, 1, ",");
+  LCD.print(67, 37, 1, averageSpeed % 10);
+  LCD.print(73, 37, 1, "км/ч");
 
   // использовано батареи
-  LCD.print(0, 45, 1, "UsedBat");
+  LCD.print(0, 45, 1, "UseBat");
   LCD.print(48, 45, 1, startBatCharge - batCharge);
   if (startBatCharge - batCharge > 9) {
     LCD.print(60, 45, 1, "%");
@@ -237,33 +237,33 @@ void Display3() {
   // запас хода
   LCD.print(0, 53, 1, "RemDist");
   int remDist = (inBatCapacityLeft + exBatCapacityLeft) * currentMileage / (startBatCapacityLeft - inBatCapacityLeft - exBatCapacityLeft);
-  LCD.print(64, 53, 1, (remDist % 10000) / 1000);
-  LCD.print(70, 53, 1, (remDist % 1000) / 100);
-  LCD.print(75, 53, 1, ",");
-  LCD.print(79, 53, 1, (remDist % 100) / 10);
-  LCD.print(85, 53, 1, remDist % 10);
-  LCD.print(91, 53, 1, "км");
+  LCD.print(58, 53, 1, (remDist % 10000) / 1000);
+  LCD.print(64, 53, 1, (remDist % 1000) / 100);
+  LCD.print(69, 53, 1, ",");
+  LCD.print(73, 53, 1, (remDist % 100) / 10);
+  LCD.print(79, 53, 1, remDist % 10);
+  LCD.print(85, 53, 1, "км");
 
   // общий пробег самоката
   LCD.print(0, 61, 1, "Total");
   if (totalMileage > 9999999) {
-    LCD.print(40, 61, 1, totalMileage / 1000);
+    LCD.print(34, 61, 1, totalMileage / 1000);
   }
   else if (totalMileage > 999999) {
-    LCD.print(46, 61, 1, totalMileage / 1000);
+    LCD.print(40, 61, 1, totalMileage / 1000);
   }
   else if (totalMileage > 99999) {
-    LCD.print(52, 61, 1, totalMileage / 1000);
+    LCD.print(46, 61, 1, totalMileage / 1000);
   }
   else if (totalMileage > 9999) {
-    LCD.print(58, 61, 1, totalMileage / 1000);
+    LCD.print(52, 61, 1, totalMileage / 1000);
   }
   else {
-    LCD.print(64, 61, 1, totalMileage / 1000);
+    LCD.print(58, 61, 1, totalMileage / 1000);
   }
-  LCD.print(69, 61, 1, ",");
-  LCD.print(73, 61, 1, totalMileage % 1000);
-  LCD.print(91, 61, 1, "км");
+  LCD.print(63, 61, 1, ",");
+  LCD.print(67, 61, 1, totalMileage % 1000);
+  LCD.print(85, 61, 1, "км");
   LCD.Update();
 }
 
@@ -487,5 +487,10 @@ void DisplayLogo() {
   LCD.print(6, 17, 1, "CRUISE CONTROL");
   LCD.print(21, 40, 1, "by SPChip");
   LCD.print(1, 60, 1, "ver 1.0");
+  LCD.Update();
+}
+void DisplayNoData() {
+  LCD.Clear_LCD();  
+  LCD.print(25, 25, 1, "NO DATA!");  
   LCD.Update();
 }
