@@ -1,4 +1,4 @@
-//SPChip 1.6
+//SPChip 2.0
 #include "lcd1202.h"      // Библиотека для дисплея
 #include "GyverButton.h"  // Библиотека для кнопок
 #include "GyverTimer.h"   // Библиотека для таймеров
