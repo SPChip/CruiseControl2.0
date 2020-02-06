@@ -63,38 +63,41 @@ void Display1() {
     LCD.print(84, 10, 1, batCharge);
   }
   LCD.print(91, 10, 1, "%");
+  
   //температура
-  LCD.print(40, 0, 1, escTemp / 10);
-  if (int(escTemp / 10) >= 10) {
+  LCD.print(40, 0, 1, (int) RTC.readTemperature());
+  if ((int) RTC.readTemperature() >= 10) {
     LCD.drawCircle(54, 1, 1, 1);
   }
-  else if (int(escTemp / 10) >= 0 && int(escTemp / 10) < 10) {
+  else if ((int) RTC.readTemperature() >= 0 && (int) RTC.readTemperature() < 10) {
     LCD.drawCircle(48, 1, 1, 1);
   }
-  else if (int(escTemp / 10) > -10 && int(escTemp / 10) < 0) {
+  else if ((int) RTC.readTemperature() > -10 && (int) RTC.readTemperature() < 0) {
     LCD.drawCircle(54, 1, 1, 1);
   }
   else  {
     LCD.drawCircle(60, 1, 1, 1);
   }
+  
   //часы
-
-  if (RTC.getHours() < 10) {
+  RTCDateTime dt;         // объявляем стурктуру данных
+  dt = RTC.getDateTime(); // и записываем в нее время и дату
+  if (dt.hour < 10) {
     LCD.print(0, 0, 1, " ");    // часы
-    LCD.print(6, 0, 1, RTC.getHours());
+    LCD.print(6, 0, 1, dt.hour);
   }
   else {
-    LCD.print(0, 0, 1, RTC.getHours());
+    LCD.print(0, 0, 1, dt.hour);
   }
 
   LCD.print(12, 0, 1, ":");
 
-  if (RTC.getMinutes() < 10) {
+  if (dt.minute < 10) {
     LCD.print(18, 0, 1, "0");    // минуты
-    LCD.print(24, 0, 1, RTC.getMinutes());
+    LCD.print(24, 0, 1, dt.minute);
   }
   else {
-    LCD.print(18, 0, 1, RTC.getMinutes());
+    LCD.print(18, 0, 1, dt.minute);
   }
 
 

@@ -4,10 +4,12 @@ void Settings() {                               // меню настроек
   bool inputSettings = 0;                       // флаг выбора установки (вход в установку выполнен или нет)
   bool flagBlink = 1;                           // флаг для мигания изменяемого параметра
   LCD.Clear_LCD();                              // очищаем дисплей
+  RTCDateTime dt;                               // объявляем стурктуру данных для времени и даты
   while (!BTN1.isHolded()) {                    // пока не будет удержана кнопка 1
     BTN1.tick();                                // постоянно проверяем все три кнопки
     BTN2.tick();
     BTN3.tick();
+    dt = RTC.getDateTime();                      // записываем время и дату в dt
     if (inputSettings == 0 && BTN2.isClick()) {  // если не выбрана установка и нажата кнопка 2
       LCD.Clear_LCD();
       setting--;                                 // переходим к предъидущей настройке
@@ -53,43 +55,43 @@ void Settings() {                               // меню настроек
             case 1:                     //установка часов
               if (BTN2.isClick() || BTN2.isStep()) {
                 LCD.Clear_LCD();
-                char hour = RTC.getHours() - 1;
+                char hour = dt.hour - 1;
                 if (hour < 0) hour = 23;
-                RTC.setTime(RTC.getSeconds(), RTC.getMinutes(), hour, RTC.getDate(), RTC.getMonth(), RTC.getYear());
+                RTC.setDateTime(dt.year, dt.month, dt.day, hour, dt.minute, dt.second);
               }
               if (BTN3.isClick() || BTN3.isStep()) {
                 LCD.Clear_LCD();
-                char hour = RTC.getHours() + 1;
+                char hour = dt.hour + 1;
                 if (hour >= 24) hour = 0;
-                RTC.setTime(RTC.getSeconds(), RTC.getMinutes(), hour, RTC.getDate(), RTC.getMonth(), RTC.getYear());
+                RTC.setDateTime(dt.year, dt.month, dt.day, hour, dt.minute, dt.second);
               }
               break;
             case 2:                     //установка минут
               if (BTN2.isClick() || BTN2.isStep()) {
                 LCD.Clear_LCD();
-                char minutes = RTC.getMinutes() - 1;
+                char minutes = dt.minute - 1;
                 if (minutes < 0) minutes = 59;
-                RTC.setTime(RTC.getSeconds(), minutes, RTC.getHours(), RTC.getDate(), RTC.getMonth(), RTC.getYear());
+                RTC.setDateTime(dt.year, dt.month, dt.day, dt.hour, minutes, dt.second);
               }
               if (BTN3.isClick() || BTN3.isStep()) {
                 LCD.Clear_LCD();
-                char minutes = RTC.getMinutes() + 1;
+                char minutes = dt.minute + 1;
                 if (minutes >= 60) minutes = 0;
-                RTC.setTime(RTC.getSeconds(), minutes, RTC.getHours(), RTC.getDate(), RTC.getMonth(), RTC.getYear());
+                RTC.setDateTime(dt.year, dt.month, dt.day, dt.hour, minutes, dt.second);
               }
               break;
             case 3:                     //установка секунд
               if (BTN2.isClick() || BTN2.isStep()) {
                 LCD.Clear_LCD();
-                char sec = RTC.getSeconds() - 1;
+                char sec = dt.second - 1;
                 if (sec < 0) sec = 59;
-                RTC.setTime(sec, RTC.getMinutes(), RTC.getHours(), RTC.getDate(), RTC.getMonth(), RTC.getYear());
+                RTC.setDateTime(dt.year, dt.month, dt.day, dt.hour, dt.minute, sec);
               }
               if (BTN3.isClick() || BTN3.isStep()) {
                 LCD.Clear_LCD();
-                char sec = RTC.getSeconds() + 1;
+                char sec = dt.second + 1;
                 if (sec >= 60) sec = 0;
-                RTC.setTime(sec, RTC.getMinutes(), RTC.getHours(), RTC.getDate(), RTC.getMonth(), RTC.getYear());
+                RTC.setDateTime(dt.year, dt.month, dt.day, dt.hour, dt.minute, sec);
               }
               break;
           }
@@ -236,22 +238,22 @@ void Settings() {                               // меню настроек
         }
         else {
 
-          if (RTC.getHours() < 10) {
-            LCD.print(54, 21, 1,  RTC.getHours());
+          if (dt.hour < 10) {
+            LCD.print(54, 21, 1,  dt.hour);
           }
           else {
-            LCD.print(48, 21, 1,  RTC.getHours());
+            LCD.print(48, 21, 1,  dt.hour);
           }
         }
         flagBlink = !flagBlink;
       }
     }
     else {
-      if (RTC.getHours() < 10) {
-        LCD.print(54, 21, 1,  RTC.getHours());
+      if (dt.hour < 10) {
+        LCD.print(54, 21, 1,  dt.hour);
       }
       else {
-        LCD.print(48, 21, 1,  RTC.getHours());
+        LCD.print(48, 21, 1,  dt.hour);
       }
     }
     LCD.print(60, 21, 1, ":");
@@ -263,24 +265,24 @@ void Settings() {                               // меню настроек
         }
         else {
 
-          if (RTC.getMinutes() < 10) {
+          if (dt.minute < 10) {
             LCD.print(66, 21, 1,  "0");
-            LCD.print(72, 21, 1,  RTC.getMinutes());
+            LCD.print(72, 21, 1,  dt.minute);
           }
           else {
-            LCD.print(66, 21, 1,  RTC.getMinutes());
+            LCD.print(66, 21, 1,  dt.minute);
           }
         }
         flagBlink = !flagBlink;
       }
     }
     else {
-      if (RTC.getMinutes() < 10) {
+      if (dt.minute < 10) {
         LCD.print(66, 21, 1,  "0");
-        LCD.print(72, 21, 1,  RTC.getMinutes());
+        LCD.print(72, 21, 1,  dt.minute);
       }
       else {
-        LCD.print(66, 21, 1,  RTC.getMinutes());
+        LCD.print(66, 21, 1,  dt.minute);
       }
     }
     LCD.print(79, 21, 1, ":");
@@ -292,24 +294,24 @@ void Settings() {                               // меню настроек
         }
         else {
 
-          if (RTC.getSeconds() < 10) {
+          if (dt.second < 10) {
             LCD.print(85, 21, 1,  "0");
-            LCD.print(91, 21, 1,  RTC.getSeconds());
+            LCD.print(91, 21, 1,  dt.second);
           }
           else {
-            LCD.print(85, 21, 1,  RTC.getSeconds());
+            LCD.print(85, 21, 1,  dt.second);
           }
         }
         flagBlink = !flagBlink;
       }
     }
     else {
-      if (RTC.getSeconds() < 10) {
+      if (dt.second < 10) {
         LCD.print(85, 21, 1,  "0");
-        LCD.print(91, 21, 1,  RTC.getSeconds());
+        LCD.print(91, 21, 1,  dt.second);
       }
       else {
-        LCD.print(85, 21, 1,  RTC.getSeconds());
+        LCD.print(85, 21, 1, dt.second);
       }
     }
     // пассивный режим

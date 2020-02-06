@@ -1,11 +1,20 @@
-//SPChip 2.2
-#include "lcd1202.h"      // Библиотека для дисплея
-#include "GyverButton.h"  // Библиотека для кнопок
-#include "GyverTimer.h"   // Библиотека для таймеров
-#include "GyverPID.h"     // Библиотека для PID регулятора
-#include <EEPROM.h>       // Библиотека для eeprom
-#include "microDS3231.h"  // Библиотека для часов
-
+//SPChip 2.3
+/*Круиз контроль и дополнительный дисплей для NINEBOT ES2
+ Переключение дисплеев - кнопка 1
+ Вход в настройки - удерживать 2 сек кнопку 1
+ В настрйках вверх и вниз - кнопки 2 и 3
+ Выбор настройки - кнопка 1
+ Включение круиза - кнопка 2 или 3
+ Изменение скоростти - кнопка 2 или 3
+ */
+/*
+  библиотека Adafruit_MCP4725.h https://github.com/adafruit/Adafruit_MCP4725/archive/master.zip
+  библиотека DS3231.h https://github.com/jarzebski/Arduino-DS3231.git
+  библиотека для дисплея https://yadi.sk/d/uwlwBOyijDYYR
+  библиотека для кнопок https://github.com/AlexGyver/GyverLibs/releases/download/GyverButton/GyverButton.zip
+  библиотека для таймеров https://github.com/AlexGyver/GyverLibs/releases/download/GyverTimer/GyverTimer.zip
+  библиотека для ПИД регулятора https://github.com/AlexGyver/GyverLibs/releases/download/GyverPID/GyverPID.zip  
+*/
 
 #define BTN_PIN1 14     // кнопка1 подключена сюда (BTN_PIN --- КНОПКА --- GND)
 #define BTN_PIN2 15     // кнопка2 подключена сюда (BTN_PIN --- КНОПКА --- GND)
@@ -15,7 +24,6 @@
 #define NINEBOT_PORT Serial1   // Порт подключения к самокату
 #define TIMEOUT_QUERY 50       // пауза между запросами, мс 
 #define TIMEOUT_LCD 900        // пауза между обновлениями экрана, мс 
-
 
 #define INIT_ADDR 1023        // номер резервной ячейки для инициализации первого запуска
 #define INIT_KEY 33           // ключ первого запуска. 0-254, на выбор, надо поменять на любое значение и будет как впервый раз
@@ -27,12 +35,22 @@
 #define KD_ADDR 50            // адрес в eeprom для хранения коэффициента Kd
 #define STEP_ADDR 60          // адрес в eeprom для хранения шага изменения скорости
 
+#include <Wire.h>             // Библиотека для работы с шиной I2C
+#include <EEPROM.h>           // Библиотека для eeprom
+#include "lcd1202.h"          // Библиотека для дисплея
+#include "DS3231.h"           // Библиотека для часов реального времени
+#include "Adafruit_MCP4725.h" // Библиотека для работы с ЦАП
+#include "GyverButton.h"      // Библиотека для кнопок
+#include "GyverTimer.h"       // Библиотека для таймеров
+#include "GyverPID.h"         // Библиотека для PID регулятора
 
 GButton BTN1(BTN_PIN1, HIGH_PULL, NORM_OPEN);     // настраиваем кнопку 1
 GButton BTN2(BTN_PIN2, HIGH_PULL, NORM_OPEN);     // настраиваем кнопку 2
 GButton BTN3(BTN_PIN3, HIGH_PULL, NORM_OPEN);     // настраиваем кнопку 3
-LCD1202 LCD(8, 7, 6, 5);  // RST, CS, MOSI, SCK   // подключаем дисплей
-MicroDS3231 RTC;                                  // подключаем часы реального времени
+LCD1202 LCD(8, 7, 6, 5);  // RST, CS, MOSI, SCK   // создаем и подключаем дисплей
+DS3231 RTC;                                       // создаем часы реального времени
+Adafruit_MCP4725 DAC_ACCEL;                       // создаем ЦАП управления газом
+Adafruit_MCP4725 DAC_BRAKE;                       // создаем ЦАП управления тормозом
 GTimer BLINK_TIMER(MS, 500);                      // создаем таймер для мигания в меню настроек
 GTimer LCD_TIMER(MS, TIMEOUT_LCD);                // создаем таймер для отрисовки дисплея
 GyverPID REGULATOR(0, 0, 0, 100);                 // создаем регулятор PID
@@ -83,6 +101,10 @@ void setup() {
   BTN1.setTimeout(2000);                    // таймаут для долгого нажатия кнопки 1
   BTN2.setStepTimeout(200);                 // установка таймаута между инкрементами ( с какой скоростью будут меняться цифры при удержании кнопки)
   BTN3.setStepTimeout(200);                 // установка таймаута между инкрементами ( с какой скоростью будут меняться цифры при удержании кнопки)
+  REGULATOR.setLimits(0, 4095);             // пределы, которые будем подавать на входы ЦАПов
+  RTC.begin();                              // включаем часы реального времени
+  DAC_ACCEL.begin(0x60);                    // включаем ЦАП газа по адресу 0x60
+  DAC_BRAKE.begin(0x61);                    // включаем ЦАП тормоза по адресу 0x61
   dysplayMode = 3;                          // в этом режиме запрашиваются нужные данные для начальных % и емкости
   if (EEPROM.read(INIT_ADDR) != INIT_KEY) { // первый запуск
     EEPROM.write(INIT_ADDR, INIT_KEY);      // записали ключ
@@ -101,17 +123,17 @@ void setup() {
   EEPROM.get(KI_ADDR, REGULATOR.Ki);             // читаем и устанавливаем значение Ki
   EEPROM.get(KD_ADDR, REGULATOR.Kd);             // читаем и устанавливаем значение Kd
   EEPROM.get(STEP_ADDR, stepChangeSpeed);        // читаем и устанавливаем значение шага изменения скорости
-/*
-  while (millis () < 3000 ) {               // ждем 3 сек, чтобы наверняка получить все данные
-    ReceivingData ();                       // получаем данные о начальном % и емкости батарей
-    if (batCharge > 0 && inBatCapacityLeft > 0 && exBatCapacityLeft > 0 ) return ; // если нужные данные получены выходим из пока досрочно
-  }
-  startBatCharge = batCharge;   // засекаем начальный заряд батареи
-  startBatCapacityLeft = inBatCapacityLeft + exBatCapacityLeft;  // засекаем начальную емкость батарей
-  if (startBatCharge == 0 || startBatCapacityLeft == 0) {
-    DisplayNoData();
-    delay (1000);
-  }
+  /*
+    while (millis () < 3000 ) {               // ждем 3 сек, чтобы наверняка получить все данные
+      ReceivingData ();                       // получаем данные о начальном % и емкости батарей
+      if (batCharge > 0 && inBatCapacityLeft > 0 && exBatCapacityLeft > 0 ) return ; // если нужные данные получены выходим из пока досрочно
+    }
+    startBatCharge = batCharge;   // засекаем начальный заряд батареи
+    startBatCapacityLeft = inBatCapacityLeft + exBatCapacityLeft;  // засекаем начальную емкость батарей
+    if (startBatCharge == 0 || startBatCapacityLeft == 0) {
+      DisplayNoData();
+      delay (1000);
+    }
   */
   EEPROM.get(DISPLAY_MODE_ADDR, dysplayMode);    // читаем режим экрана из eeprom
 }
