@@ -1,19 +1,19 @@
 //SPChip 2.3
 /*Круиз контроль и дополнительный дисплей для NINEBOT ES2
- Переключение дисплеев - кнопка 1
- Вход в настройки - удерживать 2 сек кнопку 1
- В настрйках вверх и вниз - кнопки 2 и 3
- Выбор настройки - кнопка 1
- Включение круиза - кнопка 2 или 3
- Изменение скоростти - кнопка 2 или 3
- */
+  Переключение дисплеев - кнопка 1
+  Вход в настройки - удерживать 2 сек кнопку 1
+  В настрйках вверх и вниз - кнопки 2 и 3
+  Выбор настройки - кнопка 1
+  Включение круиза - кнопка 2 или 3
+  Изменение скоростти - кнопка 2 или 3
+*/
 /*
   библиотека Adafruit_MCP4725.h https://github.com/adafruit/Adafruit_MCP4725/archive/master.zip
   библиотека DS3231.h https://github.com/jarzebski/Arduino-DS3231.git
   библиотека для дисплея https://yadi.sk/d/uwlwBOyijDYYR
   библиотека для кнопок https://github.com/AlexGyver/GyverLibs/releases/download/GyverButton/GyverButton.zip
   библиотека для таймеров https://github.com/AlexGyver/GyverLibs/releases/download/GyverTimer/GyverTimer.zip
-  библиотека для ПИД регулятора https://github.com/AlexGyver/GyverLibs/releases/download/GyverPID/GyverPID.zip  
+  библиотека для ПИД регулятора https://github.com/AlexGyver/GyverLibs/releases/download/GyverPID/GyverPID.zip
 */
 
 #define BTN_PIN1 14     // кнопка1 подключена сюда (BTN_PIN --- КНОПКА --- GND)
@@ -105,7 +105,7 @@ void setup() {
   RTC.begin();                              // включаем часы реального времени
   DAC_ACCEL.begin(0x60);                    // включаем ЦАП газа по адресу 0x60
   DAC_BRAKE.begin(0x61);                    // включаем ЦАП тормоза по адресу 0x61
-  dysplayMode = 3;                          // в этом режиме запрашиваются нужные данные для начальных % и емкости
+
   if (EEPROM.read(INIT_ADDR) != INIT_KEY) { // первый запуск
     EEPROM.write(INIT_ADDR, INIT_KEY);      // записали ключ
     EEPROM.put(DISPLAY_MODE_ADDR, 1);       // режим экрана 1
@@ -123,18 +123,18 @@ void setup() {
   EEPROM.get(KI_ADDR, REGULATOR.Ki);             // читаем и устанавливаем значение Ki
   EEPROM.get(KD_ADDR, REGULATOR.Kd);             // читаем и устанавливаем значение Kd
   EEPROM.get(STEP_ADDR, stepChangeSpeed);        // читаем и устанавливаем значение шага изменения скорости
-  /*
-    while (millis () < 3000 ) {               // ждем 3 сек, чтобы наверняка получить все данные
-      ReceivingData ();                       // получаем данные о начальном % и емкости батарей
-      if (batCharge > 0 && inBatCapacityLeft > 0 && exBatCapacityLeft > 0 ) return ; // если нужные данные получены выходим из пока досрочно
-    }
-    startBatCharge = batCharge;   // засекаем начальный заряд батареи
-    startBatCapacityLeft = inBatCapacityLeft + exBatCapacityLeft;  // засекаем начальную емкость батарей
-    if (startBatCharge == 0 || startBatCapacityLeft == 0) {
-      DisplayNoData();
-      delay (1000);
-    }
-  */
+  dysplayMode = 3;                          // в этом режиме запрашиваются нужные данные для начальных % и емкости
+ /* while (millis () < 4000 ) {               // ждем 3 сек, чтобы наверняка получить все данные
+    ReceivingData ();                       // получаем данные о начальном % и емкости батарей
+    if (batCharge > 0 && inBatCapacityLeft > 0 && exBatCapacityLeft > 0 ) return ; // если нужные данные получены выходим из пока досрочно
+  }
+  startBatCharge = batCharge;   // засекаем начальный заряд батареи
+  startBatCapacityLeft = inBatCapacityLeft + exBatCapacityLeft;  // засекаем начальную емкость батарей
+  if (startBatCharge == 0 || startBatCapacityLeft == 0) {
+    DisplayNoData();
+    delay (1000);
+  }
+*/
   EEPROM.get(DISPLAY_MODE_ADDR, dysplayMode);    // читаем режим экрана из eeprom
 }
 
