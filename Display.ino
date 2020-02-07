@@ -189,7 +189,7 @@ void Display3() {
   else {
     LCD.print(85, 13, 1, int(((millis() % 3600000) % 60000) / 1000));
   }
-  LCD.Update();
+  
 
   // пробег за поездку
   LCD.print(0, 21, 1, "Dist");

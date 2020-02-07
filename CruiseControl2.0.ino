@@ -56,17 +56,17 @@ GTimer LCD_TIMER(MS, TIMEOUT_LCD);                // создаем таймер
 GyverPID REGULATOR(0, 0, 0, 100);                 // создаем регулятор PID
 
 byte curs = 0;                       // текущий элемент массива данных, количество данных
-byte data[200] = {0};                // массив для данных, нулевой элемент = 0
-byte dysplayMode;                    // режим экрана
+byte data[100] = {0};                // массив для данных, нулевой элемент = 0
+int dysplayMode = 3;                 // в этом режиме запрашиваются нужные данные для начальных % и емкости
 bool passiveMode;                    // флаг пассивного режима
 bool newDataFlag = 0;                // новые данные о скорости (для отрисовки на дисплее)  скорость и др
 bool BL_Lcd;                         // состояние подсветки вкл/выкл
 bool cruiseControlFlag = 0;          // флаг включения круиз контроля
 
 
-unsigned int startBatCharge;          // % акб при включении
-unsigned int startBatCapacityLeft;    // остаточная емкость обоих батарей при включении
-unsigned int batCharge;               // % акб
+unsigned int startBatCharge = 0;      // % акб при включении
+unsigned int startBatCapacityLeft = 0;// остаточная емкость обоих батарей при включении
+unsigned int batCharge = 0;           // % акб
 int currentSpeed;                     // текущая скорость
 int presetSpeed;                      // установленная скорость для круиз контроля
 int stepChangeSpeed;                  // шаг изменения скорости
@@ -77,8 +77,8 @@ unsigned long totalMileage;           // общий пробег
 unsigned long currentMileage;         // текущий пробег
 unsigned int ridingTime;              // время вождения
 int escTemp;                          // температура контроллера
-unsigned int inBatCapacityLeft;       // остаточная емкость внутренней батареи
-unsigned int exBatCapacityLeft;       // остаточная емкость внешней батареи
+unsigned int inBatCapacityLeft = 0;   // остаточная емкость внутренней батареи
+unsigned int exBatCapacityLeft = 0;   // остаточная емкость внешней батареи
 unsigned int inBatCharge;             // заряд внутренней батареи
 unsigned int exBatCharge;             // заряд внешней батареи
 int inBatCurent;                      // ток внутренней батареи
@@ -119,14 +119,10 @@ void setup() {
   EEPROM.get(BACKLIGHT_ADDR, BL_Lcd);            // читаем режим подсветки
   digitalWrite(BL_LCD_PIN, BL_Lcd);              // включаем/выключаем подсветку дисплея
   EEPROM.get(PASSIVEMODE_ADDR, passiveMode);     // читаем состояние пассивного режима
-  EEPROM.get(KP_ADDR, REGULATOR.Kp);             // читаем и устанавливаем значение Kp
-  EEPROM.get(KI_ADDR, REGULATOR.Ki);             // читаем и устанавливаем значение Ki
-  EEPROM.get(KD_ADDR, REGULATOR.Kd);             // читаем и устанавливаем значение Kd
-  EEPROM.get(STEP_ADDR, stepChangeSpeed);        // читаем и устанавливаем значение шага изменения скорости
-  dysplayMode = 3;                          // в этом режиме запрашиваются нужные данные для начальных % и емкости
- /* while (millis () < 4000 ) {               // ждем 3 сек, чтобы наверняка получить все данные
+
+  while (millis () < 4000 ) {               // ждем 3 сек, чтобы наверняка получить все данные
     ReceivingData ();                       // получаем данные о начальном % и емкости батарей
-    if (batCharge > 0 && inBatCapacityLeft > 0 && exBatCapacityLeft > 0 ) return ; // если нужные данные получены выходим из пока досрочно
+    if (batCharge > 0 && inBatCapacityLeft > 0 && exBatCapacityLeft > 0 ) break; // если нужные данные получены выходим из пока досрочно
   }
   startBatCharge = batCharge;   // засекаем начальный заряд батареи
   startBatCapacityLeft = inBatCapacityLeft + exBatCapacityLeft;  // засекаем начальную емкость батарей
@@ -134,11 +130,12 @@ void setup() {
     DisplayNoData();
     delay (1000);
   }
-*/
+  EEPROM.get(KP_ADDR, REGULATOR.Kp);             // читаем и устанавливаем значение Kp
+  EEPROM.get(KI_ADDR, REGULATOR.Ki);             // читаем и устанавливаем значение Ki
+  EEPROM.get(KD_ADDR, REGULATOR.Kd);             // читаем и устанавливаем значение Kd
+  EEPROM.get(STEP_ADDR, stepChangeSpeed);        // читаем и устанавливаем значение шага изменения скорости
   EEPROM.get(DISPLAY_MODE_ADDR, dysplayMode);    // читаем режим экрана из eeprom
 }
-
-
 
 
 
