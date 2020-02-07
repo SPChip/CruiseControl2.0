@@ -100,15 +100,31 @@ void Display1() {
     LCD.print(18, 0, 1, dt.minute);
   }
 
-
-
-  //расход
-  LCD.simb16x32(0, 15, 1, 0);
-  LCD.simb16x32(18, 15, 1, 3);
-  LCD.simb16x32(36, 15, 1, 4);
-  LCD.simb16x32(54, 15, 1, 2);
-  LCD.print(75, 33, 1, "Втч");
-  LCD.print(75, 40, 1, "/км");
+  //ток
+  
+  if (phaseCurentMotor >= 0) {
+    if (phaseCurentMotor  >= 1000) {
+      LCD.simb16x32(0, 15, 1, (phaseCurentMotor % 10000) / 1000);
+    }    
+  }
+  else {
+    LCD.fillRoundRect(2, 29, 12, 3,2, 1);// минус
+  }
+  LCD.simb16x32(18, 15, 1, (abs(phaseCurentMotor) % 1000) / 100);
+  // запятая
+  LCD.fillRect(36, 41, 4, 4, 1);
+   LCD.fillRect(38, 45, 2, 2, 1);
+    LCD.fillRect(36, 47, 2, 2, 1);  
+  // десятые и сотые
+  LCD.simb16x32(42, 15, 1, (abs(phaseCurentMotor) % 100) / 10);
+  LCD.simb16x32(60, 15, 1, abs(phaseCurentMotor) % 10);
+  //А
+  LCD.fillRect(80, 35, 2, 12, 1);
+  LCD.fillRect(88, 35, 2, 12, 1);
+  LCD.fillRect(82, 33, 6, 2, 1);
+  LCD.fillRect(82, 40, 6, 2, 1);   
+  
+  
   //линии
   LCD.drawFastHLine(0, 50, 96, 1);
   LCD.drawFastVLine(45, 50, 18, 1);
@@ -350,7 +366,6 @@ void Display4() {                    // информация о батареях
   else {
     LCD.print(28, 41, 1, "-");
   }
-
   LCD.print(34, 41, 1, (abs(inBatCurent) % 1000) / 100);
   LCD.print(39, 41, 1, ",");
   LCD.print(43, 41, 1, (abs(inBatCurent) % 100) / 10);
