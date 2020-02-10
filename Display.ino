@@ -54,13 +54,13 @@ void Display1() {
   }
   //% зарядки
   if (batCharge >= 100) {
-    LCD.print(72, 10, 1, batCharge);
+    LCD.print(73, 10, 1, batCharge);
   }
   else if (batCharge >= 10 && batCharge < 100) {
-    LCD.print(78, 10, 1, batCharge);
+    LCD.print(79, 10, 1, batCharge);
   }
   else  {
-    LCD.print(84, 10, 1, batCharge);
+    LCD.print(85, 10, 1, batCharge);
   }
   LCD.print(91, 10, 1, "%");
   
@@ -344,13 +344,13 @@ void Display4() {                    // информация о батареях
   LCD.print(55, 31, 1, "%");
 
   if (exBatCharge >= 100) {
-    LCD.print(72, 31, 1, exBatCharge);
+    LCD.print(73, 31, 1, exBatCharge);
   }
   else if (exBatCharge >= 10 && exBatCharge < 100) {
-    LCD.print(78, 31, 1, exBatCharge);
+    LCD.print(79, 31, 1, exBatCharge);
   }
   else {
-    LCD.print(84, 31, 1, exBatCharge);
+    LCD.print(85, 31, 1, exBatCharge);
   }
   LCD.print(91, 31, 1, "%");
   // ток
@@ -387,16 +387,17 @@ void Display4() {                    // информация о батареях
   LCD.print(79, 41, 1, (abs(exBatCurent) % 100) / 10);
   LCD.print(85, 41, 1, abs(exBatCurent) % 10);
   LCD.print(91, 41, 1, "A");
-  // напряжение
+  // напряжение  
   LCD.print(0, 51, 1, "Volt");
-
   LCD.print(28, 51, 1, inBatVoltage / 100);
   LCD.print(39, 51, 1, ",");
-  LCD.print(43, 51, 1, inBatVoltage % 100);
+  LCD.print(43, 51, 1, (inBatVoltage % 100)/10);
+  LCD.print(49, 51, 1, inBatVoltage % 10);
   LCD.print(55, 51, 1, "V");
   LCD.print(64, 51, 1, exBatVoltage / 100);
   LCD.print(75, 51, 1, ",");
-  LCD.print(79, 51, 1, exBatVoltage % 100);
+  LCD.print(79, 51, 1, (exBatVoltage % 100)/10);
+  LCD.print(85, 51, 1, exBatVoltage % 10);
   LCD.print(91, 51, 1, "V");
   // температура
   LCD.print(0, 61, 1, "Temp");

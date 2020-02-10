@@ -352,20 +352,34 @@ void Settings() {                               // меню настроек
     if (inputSettings && setting == 4 && levelMenu == 1 && !BTN2.state() && !BTN3.state()) {
       if (BLINK_TIMER.isReady()) {
         if (flagBlink) {
-          LCD.print(28, 41, 1,  "   ");
+          LCD.print(25, 41, 1,  "    ");
         }
         else {
-          LCD.print(22, 41, 1, (int) REGULATOR.Kp);
-          LCD.print(34, 41, 1, ".");
-          LCD.print(39, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+          if (REGULATOR.Kp >= 10) {
+            LCD.print(25, 41, 1, (int) REGULATOR.Kp);
+            LCD.print(37, 41, 1, ".");
+            LCD.print(42, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+          }
+          else {
+            LCD.print(31, 41, 1, (int) REGULATOR.Kp);
+            LCD.print(37, 41, 1, ".");
+            LCD.print(42, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+          }
         }
         flagBlink = !flagBlink;
       }
     }
     else {
-      LCD.print(28, 41, 1, (int) REGULATOR.Kp);
-      LCD.print(34, 41, 1, ".");
-      LCD.print(39, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+      if (REGULATOR.Kp >= 10) {
+            LCD.print(25, 41, 1, (int) REGULATOR.Kp);
+            LCD.print(37, 41, 1, ".");
+            LCD.print(42, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+          }
+          else {
+            LCD.print(31, 41, 1, (int) REGULATOR.Kp);
+            LCD.print(37, 41, 1, ".");
+            LCD.print(42, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+          }
     }
     // Ki
     if (inputSettings && setting == 4 && levelMenu == 2 && !BTN2.state() && !BTN3.state()) {
