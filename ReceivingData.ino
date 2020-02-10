@@ -162,7 +162,7 @@ void Query() {                                         // процедура о�
 }
 
 void Unpack() {                 // процедура распаковки пакета
-  PrintPack();
+  //PrintPack();
   switch (data[3]) {
     case ESC:
       switch (data[4]) {

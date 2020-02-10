@@ -120,15 +120,15 @@ void Settings() {                               // меню настроек
             case 1:                     //Kp
               if (BTN2.isClick() || BTN2.isStep()) {
                 LCD.Clear_LCD();
-                float _Kp = REGULATOR.Kp - 0.1;
-                if (_Kp < 0) _Kp = 0;
+                float _Kp = REGULATOR.Kp - 1.0;
+                if (_Kp < 0) _Kp = 0.0;
                 REGULATOR.Kp = _Kp;
                 EEPROM.put(KP_ADDR, REGULATOR.Kp);  // записываем в eeprom значение Kp
               }
               if (BTN3.isClick() || BTN3.isStep()) {
                 LCD.Clear_LCD();
-                float _Kp = REGULATOR.Kp + 0.1;
-                if (_Kp >  9.9) _Kp =  9.9;
+                float _Kp = REGULATOR.Kp + 1;
+                if (_Kp >  99.0) _Kp =  99.0;
                 REGULATOR.Kp = _Kp;
                 EEPROM.put(KP_ADDR, REGULATOR.Kp);  // записываем в eeprom значение Kp
               }
@@ -355,7 +355,7 @@ void Settings() {                               // меню настроек
           LCD.print(28, 41, 1,  "   ");
         }
         else {
-          LCD.print(28, 41, 1, (int) REGULATOR.Kp);
+          LCD.print(22, 41, 1, (int) REGULATOR.Kp);
           LCD.print(34, 41, 1, ".");
           LCD.print(39, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
         }

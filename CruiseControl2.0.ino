@@ -1,6 +1,6 @@
 //SPChip 2.5
 /*Круиз контроль и дополнительный дисплей для NINEBOT ES2
-  
+
   Переключение дисплеев - кнопка 1
   Вход в настройки - удерживать 2 сек кнопку 1
   В настрйках вверх и вниз - кнопки 2 и 3
@@ -107,7 +107,8 @@ void setup() {
   RTC.begin();                              // включаем часы реального времени
   DAC_ACCEL.begin(0x60);                    // включаем ЦАП газа по адресу 0x60
   DAC_BRAKE.begin(0x61);                    // включаем ЦАП тормоза по адресу 0x61
-
+  DAC_ACCEL.setVoltage(0, false);           // устанавливаем выход ЦАП газа в 0
+  DAC_BRAKE.setVoltage(0, false);           // устанавливаем выход ЦАП тормоза в 0
   if (EEPROM.read(INIT_ADDR) != INIT_KEY) { // первый запуск
     EEPROM.write(INIT_ADDR, INIT_KEY);      // записали ключ
     EEPROM.put(DISPLAY_MODE_ADDR, 1);       // режим экрана 1
@@ -173,6 +174,8 @@ void loop() {
   }
   if (analogRead(BRAKE_PIN) > 200) {             // постоянно проверяем ручку томоза и если она нажата на ...%
     cruiseControlFlag = 0;                       // выключаем круиз контроль
+    DAC_ACCEL.setVoltage(0, false);           // устанавливаем выход ЦАП газа в 0
+    DAC_BRAKE.setVoltage(0, false);           // устанавливаем выход ЦАП тормоза в 0
   }
   if (cruiseControlFlag) {                       // если флаг круиза поднят
     CruiseControl();                             // вызываем функцию круиза

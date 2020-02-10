@@ -5,10 +5,13 @@ void CruiseControl(){   // функция круиз контроля
    REGULATOR.setDirection(NORMAL);   // включаем прямое регулирование ПИДа
    DAC_BRAKE.setVoltage(0, false);   // устанавливаем выход ЦАП тормоза в 0
    DAC_ACCEL.setVoltage(REGULATOR.getResultTimer(), false);   // регулируем скорость ЦАПом газа
+   Serial.println(REGULATOR.getResultTimer());
   }
-  if (currentSpeed > presetSpeed){   // если текущая скорость больше установленной
-   REGULATOR.setDirection(REVERSE);  // включаем обоатное регулирование ПИДа
-   DAC_ACCEL.setVoltage(0, false);   // устанавливаем выход ЦАП газа в 0
-   DAC_BRAKE.setVoltage(REGULATOR.getResultTimer(), false);   // регулируем скорость ЦАПом тормоза
-  }
+  //if (currentSpeed > presetSpeed){   // если текущая скорость больше установленной
+   //REGULATOR.setDirection(REVERSE);  // включаем обоатное регулирование ПИДа
+   //DAC_ACCEL.setVoltage(0, false);   // устанавливаем выход ЦАП газа в 0
+   //DAC_BRAKE.setVoltage(REGULATOR.getResultTimer(), false);   // регулируем скорость ЦАПом тормоза
+ // }
+  
+  //Serial.println(presetSpeed);
 }
