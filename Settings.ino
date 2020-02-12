@@ -3,6 +3,8 @@ void Settings() {                               // меню настроек
   byte levelMenu = 1;                           // подпараметры в меню
   bool inputSettings = 0;                       // флаг выбора установки (вход в установку выполнен или нет)
   bool flagBlink = 1;                           // флаг для мигания изменяемого параметра
+  
+  
   LCD.Clear_LCD();                              // очищаем дисплей
   RTCDateTime dt;                               // объявляем стурктуру данных для времени и даты
   while (!BTN1.isHolded()) {                    // пока не будет удержана кнопка 1
@@ -120,14 +122,14 @@ void Settings() {                               // меню настроек
             case 1:                     //Kp
               if (BTN2.isClick() || BTN2.isStep()) {
                 LCD.Clear_LCD();
-                float _Kp = REGULATOR.Kp - 1.0;
+                float _Kp = REGULATOR.Kp - 0.1;
                 if (_Kp < 0) _Kp = 0.0;
                 REGULATOR.Kp = _Kp;
                 EEPROM.put(KP_ADDR, REGULATOR.Kp);  // записываем в eeprom значение Kp
               }
               if (BTN3.isClick() || BTN3.isStep()) {
                 LCD.Clear_LCD();
-                float _Kp = REGULATOR.Kp + 1;
+                float _Kp = REGULATOR.Kp + 0.1;
                 if (_Kp >  99.0) _Kp =  99.0;
                 REGULATOR.Kp = _Kp;
                 EEPROM.put(KP_ADDR, REGULATOR.Kp);  // записываем в eeprom значение Kp

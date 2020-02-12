@@ -166,7 +166,7 @@ void Unpack() {                 // процедура распаковки па�
   switch (data[3]) {
     case ESC:
       switch (data[4]) {
-        case BLE:
+        case BLE:           
           break;
         case BMS:
           break;
