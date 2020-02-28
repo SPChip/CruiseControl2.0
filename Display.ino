@@ -36,6 +36,17 @@ void Display2() {
   }
   LCD.print(0, 20, 1, "Pre sp");
   LCD.print(42, 20, 1, presetSpeed);
+
+  LCD.print(31, 40, 1, (int) REGULATOR.Kp);
+  LCD.print(37, 40, 1, ".");
+  LCD.print(42, 40, 1, (int) (REGULATOR.Kp * 10) % 10);
+  LCD.print(54, 40, 1, (int) REGULATOR.Ki);
+  LCD.print(60, 40, 1, ".");
+  LCD.print(65, 40, 1, (int) (REGULATOR.Ki * 10) % 10);
+  LCD.print(80, 40, 1, (int) REGULATOR.Kd);
+  LCD.print(86, 40, 1, ".");
+  LCD.print(91, 40, 1, (int) (REGULATOR.Kd * 10) % 10);
+
   LCD.print(0, 30, 1, "Cur sp");
   LCD.print(42, 30, 1, currentSpeed);
   LCD.Update();
@@ -63,7 +74,7 @@ void Display1() {
     LCD.print(85, 10, 1, batCharge);
   }
   LCD.print(91, 10, 1, "%");
-  
+
   //температура
   LCD.print(40, 0, 1, (int) RTC.readTemperature());
   if ((int) RTC.readTemperature() >= 10) {
@@ -78,7 +89,7 @@ void Display1() {
   else  {
     LCD.drawCircle(60, 1, 1, 1);
   }
-  
+
   //часы
   RTCDateTime dt;         // объявляем стурктуру данных
   dt = RTC.getDateTime(); // и записываем в нее время и дату
@@ -101,20 +112,20 @@ void Display1() {
   }
 
   //ток
-  
+
   if (phaseCurentMotor >= 0) {
     if (phaseCurentMotor  >= 1000) {
       LCD.simb16x32(0, 15, 1, (phaseCurentMotor % 10000) / 1000);
-    }    
+    }
   }
   else {
-    LCD.fillRoundRect(2, 29, 12, 3,2, 1);// минус
+    LCD.fillRoundRect(2, 29, 12, 3, 2, 1); // минус
   }
   LCD.simb16x32(18, 15, 1, (abs(phaseCurentMotor) % 1000) / 100);
   // запятая
   LCD.fillRect(36, 41, 4, 4, 1);
-   LCD.fillRect(38, 45, 2, 2, 1);
-    LCD.fillRect(36, 47, 2, 2, 1);  
+  LCD.fillRect(38, 45, 2, 2, 1);
+  LCD.fillRect(36, 47, 2, 2, 1);
   // десятые и сотые
   LCD.simb16x32(42, 15, 1, (abs(phaseCurentMotor) % 100) / 10);
   LCD.simb16x32(60, 15, 1, abs(phaseCurentMotor) % 10);
@@ -122,9 +133,9 @@ void Display1() {
   LCD.fillRect(80, 35, 2, 12, 1);
   LCD.fillRect(88, 35, 2, 12, 1);
   LCD.fillRect(82, 33, 6, 2, 1);
-  LCD.fillRect(82, 40, 6, 2, 1);   
-  
-  
+  LCD.fillRect(82, 40, 6, 2, 1);
+
+
   //линии
   LCD.drawFastHLine(0, 50, 96, 1);
   LCD.drawFastVLine(45, 50, 18, 1);
@@ -205,7 +216,7 @@ void Display3() {
   else {
     LCD.print(85, 13, 1, int(((millis() % 3600000) % 60000) / 1000));
   }
-  
+
 
   // пробег за поездку
   LCD.print(0, 21, 1, "Dist");
@@ -387,16 +398,16 @@ void Display4() {                    // информация о батареях
   LCD.print(79, 41, 1, (abs(exBatCurent) % 100) / 10);
   LCD.print(85, 41, 1, abs(exBatCurent) % 10);
   LCD.print(91, 41, 1, "A");
-  // напряжение  
+  // напряжение
   LCD.print(0, 51, 1, "Volt");
   LCD.print(28, 51, 1, inBatVoltage / 100);
   LCD.print(39, 51, 1, ",");
-  LCD.print(43, 51, 1, (inBatVoltage % 100)/10);
+  LCD.print(43, 51, 1, (inBatVoltage % 100) / 10);
   LCD.print(49, 51, 1, inBatVoltage % 10);
   LCD.print(55, 51, 1, "V");
   LCD.print(64, 51, 1, exBatVoltage / 100);
   LCD.print(75, 51, 1, ",");
-  LCD.print(79, 51, 1, (exBatVoltage % 100)/10);
+  LCD.print(79, 51, 1, (exBatVoltage % 100) / 10);
   LCD.print(85, 51, 1, exBatVoltage % 10);
   LCD.print(91, 51, 1, "V");
   // температура
@@ -509,7 +520,7 @@ void DisplayLogo() {
   LCD.Update();
 }
 void DisplayNoData() {
-  LCD.Clear_LCD();  
-  LCD.print(25, 25, 1, "NO DATA!");  
+  LCD.Clear_LCD();
+  LCD.print(25, 25, 1, "NO DATA!");
   LCD.Update();
 }
