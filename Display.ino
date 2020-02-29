@@ -37,15 +37,15 @@ void Display2() {
   LCD.print(0, 20, 1, "Pre sp");
   LCD.print(42, 20, 1, presetSpeed);
 
-  LCD.print(31, 40, 1, (int) REGULATOR.Kp);
+  LCD.print(31, 40, 1, (int) REGULATOR_ACCEL.Kp);
   LCD.print(37, 40, 1, ".");
-  LCD.print(42, 40, 1, (int) (REGULATOR.Kp * 10) % 10);
-  LCD.print(54, 40, 1, (int) REGULATOR.Ki);
+  LCD.print(42, 40, 1, (int) (REGULATOR_ACCEL.Kp * 10) % 10);
+  LCD.print(54, 40, 1, (int) REGULATOR_ACCEL.Ki);
   LCD.print(60, 40, 1, ".");
-  LCD.print(65, 40, 1, (int) (REGULATOR.Ki * 10) % 10);
-  LCD.print(80, 40, 1, (int) REGULATOR.Kd);
+  LCD.print(65, 40, 1, (int) (REGULATOR_ACCEL.Ki * 10) % 10);
+  LCD.print(80, 40, 1, (int) REGULATOR_ACCEL.Kd);
   LCD.print(86, 40, 1, ".");
-  LCD.print(91, 40, 1, (int) (REGULATOR.Kd * 10) % 10);
+  LCD.print(91, 40, 1, (int) (REGULATOR_ACCEL.Kd * 10) % 10);
 
   LCD.print(0, 30, 1, "Cur sp");
   LCD.print(42, 30, 1, currentSpeed);

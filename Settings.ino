@@ -122,49 +122,49 @@ void Settings() {                               // меню настроек
             case 1:                     //Kp
               if (BTN2.isClick() || BTN2.isStep()) {
                 LCD.Clear_LCD();
-                float _Kp = REGULATOR.Kp - 0.1;
+                float _Kp = REGULATOR_ACCEL.Kp - 0.1;
                 if (_Kp < 0) _Kp = 0.0;
-                REGULATOR.Kp = _Kp;
-                EEPROM.put(KP_ADDR, REGULATOR.Kp);  // записываем в eeprom значение Kp
+                REGULATOR_ACCEL.Kp = _Kp;
+                EEPROM.put(KP_ADDR, REGULATOR_ACCEL.Kp);  // записываем в eeprom значение Kp
               }
               if (BTN3.isClick() || BTN3.isStep()) {
                 LCD.Clear_LCD();
-                float _Kp = REGULATOR.Kp + 0.1;
+                float _Kp = REGULATOR_ACCEL.Kp + 0.1;
                 if (_Kp >  99.0) _Kp =  99.0;
-                REGULATOR.Kp = _Kp;
-                EEPROM.put(KP_ADDR, REGULATOR.Kp);  // записываем в eeprom значение Kp
+                REGULATOR_ACCEL.Kp = _Kp;
+                EEPROM.put(KP_ADDR, REGULATOR_ACCEL.Kp);  // записываем в eeprom значение Kp
               }
               break;
             case 2:                     //Ki
               if (BTN2.isClick() || BTN2.isStep()) {
                 LCD.Clear_LCD();
-                float _Ki = REGULATOR.Ki - 0.1;
+                float _Ki = REGULATOR_ACCEL.Ki - 0.1;
                 if (_Ki < 0) _Ki = 0;
-                REGULATOR.Ki = _Ki;
-                EEPROM.put(KI_ADDR, REGULATOR.Ki);  // записываем в eeprom значение Ki
+                REGULATOR_ACCEL.Ki = _Ki;
+                EEPROM.put(KI_ADDR, REGULATOR_ACCEL.Ki);  // записываем в eeprom значение Ki
               }
               if (BTN3.isClick() || BTN3.isStep()) {
                 LCD.Clear_LCD();
-                float _Ki = REGULATOR.Ki + 0.1;
+                float _Ki = REGULATOR_ACCEL.Ki + 0.1;
                 if (_Ki > 9.9) _Ki = 9.9;
-                REGULATOR.Ki = _Ki;
-                EEPROM.put(KI_ADDR, REGULATOR.Ki);  // записываем в eeprom значение Ki
+                REGULATOR_ACCEL.Ki = _Ki;
+                EEPROM.put(KI_ADDR, REGULATOR_ACCEL.Ki);  // записываем в eeprom значение Ki
               }
               break;
             case 3:                    //Kd
               if (BTN2.isClick() || BTN2.isStep()) {
                 LCD.Clear_LCD();
-                float _Kd = REGULATOR.Kd - 0.1;
+                float _Kd = REGULATOR_ACCEL.Kd - 0.1;
                 if (_Kd < 0) _Kd = 0;
-                REGULATOR.Kd = _Kd;
-                EEPROM.put(KD_ADDR, REGULATOR.Kd);  // записываем в eeprom значение Kd
+                REGULATOR_ACCEL.Kd = _Kd;
+                EEPROM.put(KD_ADDR, REGULATOR_ACCEL.Kd);  // записываем в eeprom значение Kd
               }
               if (BTN3.isClick() || BTN3.isStep()) {
                 LCD.Clear_LCD();
-                float _Kd = REGULATOR.Kd + 0.1;
+                float _Kd = REGULATOR_ACCEL.Kd + 0.1;
                 if (_Kd > 9.9 ) _Kd = 9.9;
-                REGULATOR.Kd = _Kd;
-                EEPROM.put(KD_ADDR, REGULATOR.Kd);  // записываем в eeprom значение Kd
+                REGULATOR_ACCEL.Kd = _Kd;
+                EEPROM.put(KD_ADDR, REGULATOR_ACCEL.Kd);  // записываем в eeprom значение Kd
               }
               break;
           }
@@ -357,30 +357,30 @@ void Settings() {                               // меню настроек
           LCD.print(25, 41, 1,  "    ");
         }
         else {
-          if (REGULATOR.Kp >= 10) {
-            LCD.print(25, 41, 1, (int) REGULATOR.Kp);
+          if (REGULATOR_ACCEL.Kp >= 10) {
+            LCD.print(25, 41, 1, (int) REGULATOR_ACCEL.Kp);
             LCD.print(37, 41, 1, ".");
-            LCD.print(42, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+            LCD.print(42, 41, 1, (int) (REGULATOR_ACCEL.Kp * 10) % 10);
           }
           else {
-            LCD.print(31, 41, 1, (int) REGULATOR.Kp);
+            LCD.print(31, 41, 1, (int) REGULATOR_ACCEL.Kp);
             LCD.print(37, 41, 1, ".");
-            LCD.print(42, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+            LCD.print(42, 41, 1, (int) (REGULATOR_ACCEL.Kp * 10) % 10);
           }
         }
         flagBlink = !flagBlink;
       }
     }
     else {
-      if (REGULATOR.Kp >= 10) {
-            LCD.print(25, 41, 1, (int) REGULATOR.Kp);
+      if (REGULATOR_ACCEL.Kp >= 10) {
+            LCD.print(25, 41, 1, (int) REGULATOR_ACCEL.Kp);
             LCD.print(37, 41, 1, ".");
-            LCD.print(42, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+            LCD.print(42, 41, 1, (int) (REGULATOR_ACCEL.Kp * 10) % 10);
           }
           else {
-            LCD.print(31, 41, 1, (int) REGULATOR.Kp);
+            LCD.print(31, 41, 1, (int) REGULATOR_ACCEL.Kp);
             LCD.print(37, 41, 1, ".");
-            LCD.print(42, 41, 1, (int) (REGULATOR.Kp * 10) % 10);
+            LCD.print(42, 41, 1, (int) (REGULATOR_ACCEL.Kp * 10) % 10);
           }
     }
     // Ki
@@ -390,17 +390,17 @@ void Settings() {                               // меню настроек
           LCD.print(54, 41, 1,  "   ");
         }
         else {
-          LCD.print(54, 41, 1, (int) REGULATOR.Ki);
+          LCD.print(54, 41, 1, (int) REGULATOR_ACCEL.Ki);
           LCD.print(60, 41, 1, ".");
-          LCD.print(65, 41, 1, (int) (REGULATOR.Ki * 10) % 10);
+          LCD.print(65, 41, 1, (int) (REGULATOR_ACCEL.Ki * 10) % 10);
         }
         flagBlink = !flagBlink;
       }
     }
     else {
-      LCD.print(54, 41, 1, (int) REGULATOR.Ki);
+      LCD.print(54, 41, 1, (int) REGULATOR_ACCEL.Ki);
       LCD.print(60, 41, 1, ".");
-      LCD.print(65, 41, 1, (int) (REGULATOR.Ki * 10) % 10);
+      LCD.print(65, 41, 1, (int) (REGULATOR_ACCEL.Ki * 10) % 10);
     }
     // Kd
     if (inputSettings && setting == 4 && levelMenu == 3 && !BTN2.state() && !BTN3.state()) {
@@ -409,17 +409,17 @@ void Settings() {                               // меню настроек
           LCD.print(80, 41, 1,  "   ");
         }
         else {
-          LCD.print(80, 41, 1, (int) REGULATOR.Kd);
+          LCD.print(80, 41, 1, (int) REGULATOR_ACCEL.Kd);
           LCD.print(86, 41, 1, ".");
-          LCD.print(91, 41, 1, (int) (REGULATOR.Kd * 10) % 10);
+          LCD.print(91, 41, 1, (int) (REGULATOR_ACCEL.Kd * 10) % 10);
         }
         flagBlink = !flagBlink;
       }
     }
     else {
-      LCD.print(80, 41, 1, (int) REGULATOR.Kd);
+      LCD.print(80, 41, 1, (int) REGULATOR_ACCEL.Kd);
       LCD.print(86, 41, 1, ".");
-      LCD.print(91, 41, 1, (int) (REGULATOR.Kd * 10) % 10);
+      LCD.print(91, 41, 1, (int) (REGULATOR_ACCEL.Kd * 10) % 10);
     }
     // шаг изменения скорости
     LCD.print(6, 51, 1, "SpeedStep");
